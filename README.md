@@ -20,10 +20,10 @@ Ricardo SILVESTRE at ENSEA
  
  - In your main.c:
  
- ´´´c
+```c
 #include "dynamixel_protocol2.h"
 #include "dynamixel_xl320.h"
- ´´´
+```
 
 ## Hardware
 
