@@ -31,7 +31,9 @@ Ricardo SILVESTRE at ENSEA
 
 ## Software
 
- - Set a UART port for half-duplex at 1000000 baudrate (default for the XL320) and make sure to activate the DMA for the USART*_RX
+ - Set a UART port for half-duplex at 1000000 baudrate (default for the XL320)
+
+ - Activate the DMA for the USART*_RX
 
  - Inside the project make sure the DMA is initialized before the other components by placing it in the /* USER CODE BEGIN SysInit */ part of the main.c file
 
