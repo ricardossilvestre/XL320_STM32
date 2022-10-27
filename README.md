@@ -9,7 +9,7 @@ A Robotis XL320 Servo library for STM32
 Ricardo SILVESTRE at ENSEA
 - [@ricardossilvestre](https://www.github.com/ricardossilvestre)
 
-<img src="https://i.imgur.com/V16zoK4.png" width=40%>
+<img src="https://i.imgur.com/V16zoK4.png" width=30%>
 
 
 # How to use
