@@ -1,7 +1,7 @@
 # Dynamixel XL-320 @ STM32
 A Robotis XL320 Servo library for STM32
 
-<img src="https://http2.mlstatic.com/D_NQ_NP_680344-MLB41948002228_052020-O.jpg" width=50%>
+<img src="https://http2.mlstatic.com/D_NQ_NP_680344-MLB41948002228_052020-O.jpg" width=10%>
 
 
 ## Author
@@ -9,7 +9,7 @@ A Robotis XL320 Servo library for STM32
 Ricardo SILVESTRE at ENSEA
 - [@ricardossilvestre](https://www.github.com/ricardossilvestre)
 
-<img src="https://www.ensea.fr/sites/default/files/longensea.png" width=50%>
+<img src="https://i.imgur.com/V16zoK4.png" width=10%>
 
 
 # How to use
