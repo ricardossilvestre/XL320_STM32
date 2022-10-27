@@ -17,6 +17,13 @@ Ricardo SILVESTRE at ENSEA
 ## Installation
 
  - Copy and paste the "Inc" files into the "Inc" folder and the "Src" files into the "Src" folders of your STM32CubeMX project
+ 
+ - In your main.c:
+ 
+ ´´´c
+#include "dynamixel_protocol2.h"
+#include "dynamixel_xl320.h"
+ ´´´
 
 ## Hardware
 
