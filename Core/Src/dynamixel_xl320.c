@@ -8,7 +8,7 @@
 #include "../Inc/dynamixel_xl320.h"
 
 uint32_t map(uint32_t x, uint32_t in_min, uint32_t in_max, uint32_t out_min, uint32_t out_max){
-	return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+	return ((x - in_min) * (out_max - out_min)) / ((in_max - in_min) + out_min);
 }
 
 void DMA_receive_delay(){  //verify a good value for the delay
@@ -64,8 +64,10 @@ void XL320_set_led_OFF(UART_HandleTypeDef *m_huart){
 	HAL_UART_Transmit(m_huart, (uint8_t *) &TxPacket, 13, HAL_MAX_DELAY);
 }
 
-void XL320_set_pos(UART_HandleTypeDef *m_huart, uint8_t pos){
-	map(pos, 0, 300, 0, 1023);
+void XL320_set_pos(UART_HandleTypeDef *m_huart, uint16_t pos){
+	const uint16_t POS_MAX = 120; //CHANGE THIS CONSTANT TO AVOID OVERCURRENT IN THE SERVO
+	if(pos>POS_MAX) pos = POS_MAX;
+	uint16_t pos_mapped = map(pos, 0, 300, 0, 1023);
 	uint8_t TxPacket[14] = {DXL2_0_PACKET_IDX_HEADER_1,
 							 DXL2_0_PACKET_IDX_HEADER_2,
 							 DXL2_0_PACKET_IDX_HEADER_3,
@@ -76,8 +78,8 @@ void XL320_set_pos(UART_HandleTypeDef *m_huart, uint8_t pos){
 							 DXL_INST_WRITE,
 							 DXL_LOBYTE(XL_GOAL_POSITION_L),
 							 DXL_HIBYTE(XL_GOAL_POSITION_L),
-							 DXL_LOBYTE(pos),
-							 DXL_HIBYTE(pos),
+							 DXL_LOBYTE(pos_mapped),
+							 DXL_HIBYTE(pos_mapped),
 							 0,
 							 0};
 	uint16_t CRC_2 = update_crc(0, TxPacket, 12);
