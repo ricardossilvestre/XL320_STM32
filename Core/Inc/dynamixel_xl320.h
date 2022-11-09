@@ -1,6 +1,7 @@
 //***********************************************
-// STM32_servo_test
+// XL320_STM32
 // Copyright (c) 2022 Ricardo SILVESTRE.
+// Github @ricardossilvestre.
 // All rights reserved.
 //***********************************************
 
@@ -56,6 +57,13 @@ XL_PUNCH                   = 51
 #define Tx_MODE                     1
 #define Rx_MODE                     0
 
+/*	red		1
+	green	2
+	blue	4
+	yellow	3
+	cyan	6
+	purple	5
+	white	7*/
 void XL320_set_led_ON(UART_HandleTypeDef *m_huart, uint8_t color);
 
 void XL320_set_led_OFF(UART_HandleTypeDef *m_huart);

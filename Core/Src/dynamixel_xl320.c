@@ -1,6 +1,7 @@
 //***********************************************
-// STM32_servo_test
+// XL320_STM32
 // Copyright (c) 2022 Ricardo SILVESTRE.
+// Github @ricardossilvestre.
 // All rights reserved.
 //***********************************************
 
@@ -22,8 +23,6 @@ void DMA_receive_delay(){  //verify a good value for the delay
 	purple	5
 	white	7*/
 void XL320_set_led_ON(UART_HandleTypeDef *m_huart, uint8_t color){
-	uint8_t CRC_L = 0;
-	uint8_t CRC_H = 0;
 	uint8_t TxPacket[13] = {DXL2_0_PACKET_IDX_HEADER_1,
 							DXL2_0_PACKET_IDX_HEADER_2,
 							DXL2_0_PACKET_IDX_HEADER_3,
@@ -32,23 +31,19 @@ void XL320_set_led_ON(UART_HandleTypeDef *m_huart, uint8_t color){
 							0x06,
 							0x00,
 							DXL_INST_WRITE,
-							0x19,
-							0x00,
+							DXL_LOBYTE(XL_LED),
+							DXL_HIBYTE(XL_LED),
 							color,
-							CRC_L,
-							CRC_H};
+							0,
+							0};
 	uint16_t CRC_2 = update_crc(0, TxPacket, 11);
-	CRC_L = (CRC_2 & 0x00FF);
-	CRC_H = ((CRC_2 >> 8) & 0x00FF);
-	TxPacket[11] = CRC_L;
-	TxPacket[12] = CRC_H;
+	TxPacket[11] = DXL_LOBYTE(CRC_2);
+	TxPacket[12] = DXL_HIBYTE(CRC_2);
 
 	HAL_UART_Transmit(m_huart, (uint8_t *) &TxPacket, 13, HAL_MAX_DELAY);
 }
 
 void XL320_set_led_OFF(UART_HandleTypeDef *m_huart){
-	uint8_t CRC_L = 0;
-	uint8_t CRC_H = 0;
 	uint8_t TxPacket[13] = {DXL2_0_PACKET_IDX_HEADER_1,
 							DXL2_0_PACKET_IDX_HEADER_2,
 							DXL2_0_PACKET_IDX_HEADER_3,
@@ -60,24 +55,18 @@ void XL320_set_led_OFF(UART_HandleTypeDef *m_huart){
 							DXL_LOBYTE(XL_LED),
 							DXL_HIBYTE(XL_LED),
 							0x00,
-							CRC_L,
-							CRC_H};
+							0,
+							0};
 	uint16_t CRC_2 = update_crc(0, TxPacket, 11);
-	CRC_L = (CRC_2 & 0x00FF);
-	CRC_H = ((CRC_2 >> 8) & 0x00FF);
-	TxPacket[11] = CRC_L;
-	TxPacket[12] = CRC_H;
+	TxPacket[11] = DXL_LOBYTE(CRC_2);
+	TxPacket[12] = DXL_HIBYTE(CRC_2);
 
 	HAL_UART_Transmit(m_huart, (uint8_t *) &TxPacket, 13, HAL_MAX_DELAY);
 }
 
 void XL320_set_pos(UART_HandleTypeDef *m_huart, uint8_t pos){
-	uint8_t CRC_L = 0;
-	uint8_t CRC_H = 0;
 	map(pos, 0, 300, 0, 1023);
-	uint8_t pos_L = (pos & 0x00FF);
-	uint8_t pos_H = ((pos >> 8) & 0x00FF);
-	uint8_t TxPacket2[14] = {DXL2_0_PACKET_IDX_HEADER_1,
+	uint8_t TxPacket[14] = {DXL2_0_PACKET_IDX_HEADER_1,
 							 DXL2_0_PACKET_IDX_HEADER_2,
 							 DXL2_0_PACKET_IDX_HEADER_3,
 							 DXL2_0_PACKET_IDX_RESERVED,
@@ -85,24 +74,20 @@ void XL320_set_pos(UART_HandleTypeDef *m_huart, uint8_t pos){
 							 0x07,
 							 0x00,
 							 DXL_INST_WRITE,
-							 0x1E,
-							 0x00,
-							 pos_L,
-							 pos_H,
-							 CRC_L,
-							 CRC_H};
-	uint16_t CRC_2 = update_crc(0, TxPacket2, 12);
-	CRC_L = (CRC_2 & 0x00FF);
-	CRC_H = ((CRC_2 >> 8) & 0x00FF);
-	TxPacket2[12] = CRC_L;
-	TxPacket2[13] = CRC_H;
+							 DXL_LOBYTE(XL_GOAL_POSITION_L),
+							 DXL_HIBYTE(XL_GOAL_POSITION_L),
+							 DXL_LOBYTE(pos),
+							 DXL_HIBYTE(pos),
+							 0,
+							 0};
+	uint16_t CRC_2 = update_crc(0, TxPacket, 12);
+	TxPacket[12] = DXL_LOBYTE(CRC_2);
+	TxPacket[13] = DXL_HIBYTE(CRC_2);
 
-	HAL_UART_Transmit(m_huart, (uint8_t *) &TxPacket2, 14, HAL_MAX_DELAY);
+	HAL_UART_Transmit(m_huart, (uint8_t *) &TxPacket, 14, HAL_MAX_DELAY);
 }
 
 void XL320_read_moving(UART_HandleTypeDef *m_huart){
-	uint8_t CRC_L = 0;
-	uint8_t CRC_H = 0;
 	uint8_t RxPacket[13] = {0};
 
 	uint8_t TxPacket[14] = {DXL2_0_PACKET_IDX_HEADER_1,
@@ -117,13 +102,11 @@ void XL320_read_moving(UART_HandleTypeDef *m_huart){
 							0x00,
 							0x01,
 							0x00,
-							CRC_L,
-							CRC_H};
+							0,
+							0};
 	uint16_t CRC_2 = update_crc(0, TxPacket, 12);
-	CRC_L = (CRC_2 & 0X00FF);
-	CRC_H = ((CRC_2 >> 8) & 0x00FF);
-	TxPacket[12] = CRC_L;
-	TxPacket[13] = CRC_H;
+	TxPacket[12] = DXL_LOBYTE(CRC_2);
+	TxPacket[13] = DXL_HIBYTE(CRC_2);
 
 	HAL_UART_Transmit(m_huart, (uint8_t *) &TxPacket, 14, HAL_MAX_DELAY);
 	HAL_UART_Receive_DMA(m_huart, (uint8_t *) &RxPacket, 13);
@@ -131,8 +114,6 @@ void XL320_read_moving(UART_HandleTypeDef *m_huart){
 }
 
 uint16_t XL320_read_load(UART_HandleTypeDef *m_huart){
-	uint8_t CRC_L = 0;
-	uint8_t CRC_H = 0;
 	uint8_t RxPacket[14] = {0};
 
 	uint8_t TxPacket[14] = {DXL2_0_PACKET_IDX_HEADER_1,
@@ -147,13 +128,11 @@ uint16_t XL320_read_load(UART_HandleTypeDef *m_huart){
 							0x00,
 							0x02,
 							0x00,
-							CRC_L,
-							CRC_H};
+							0,
+							0};
 	uint16_t CRC_2 = update_crc(0, TxPacket, 12);
-	CRC_L = (CRC_2 & 0X00FF);
-	CRC_H = ((CRC_2 >> 8) & 0x00FF);
-	TxPacket[12] = CRC_L;
-	TxPacket[13] = CRC_H;
+	TxPacket[12] = DXL_LOBYTE(CRC_2);
+	TxPacket[13] = DXL_HIBYTE(CRC_2);
 
 	HAL_UART_Transmit(m_huart, (uint8_t *) &TxPacket, 14, HAL_MAX_DELAY);
 	HAL_UART_Receive_DMA(m_huart, (uint8_t *) &RxPacket, 14);

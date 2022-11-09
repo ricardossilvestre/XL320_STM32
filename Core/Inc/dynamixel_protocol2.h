@@ -1,6 +1,7 @@
 //***********************************************
-// STM32_servo_test
+// XL320_STM32
 // Copyright (c) 2022 Ricardo SILVESTRE.
+// Github @ricardossilvestre.
 // All rights reserved.
 //***********************************************
 
